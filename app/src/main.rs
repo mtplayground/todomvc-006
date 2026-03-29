@@ -31,10 +31,18 @@ async fn main() {
     let routes = generate_route_list(App);
 
     let app = Router::new()
-        .leptos_routes(&leptos_options, routes, {
-            let options = leptos_options.clone();
-            move || shell(options.clone())
-        })
+        .leptos_routes_with_context(
+            &leptos_options,
+            routes,
+            {
+                let pool = pool.clone();
+                move || provide_context(pool.clone())
+            },
+            {
+                let options = leptos_options.clone();
+                move || shell(options.clone())
+            },
+        )
         .fallback(leptos_axum::file_and_error_handler(shell))
         .layer(CompressionLayer::new())
         .with_state(leptos_options);
