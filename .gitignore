@@ -1,11 +1,5 @@
-# Rust
 target/
-Cargo.lock
-
-# Node
 node_modules/
-
-# Secrets and local config
 .gh_token
 .claude/
 .database_url
@@ -17,8 +11,6 @@ node_modules/
 .pipeline-state.json
 .gitkeep
 .progress
-.pr_url
-.merge_status
-
-# cargo-leptos
-site/
+*.db
+*.db-shm
+*.db-wal
