@@ -25,9 +25,22 @@ async fn main() {
         .await
         .expect("Failed to run migrations");
 
-    let conf = get_configuration(None).unwrap();
-    let leptos_options = conf.leptos_options.clone();
-    let addr = std::net::SocketAddr::from(([0, 0, 0, 0], 8080));
+    let port = std::env::var("PORT")
+        .ok()
+        .and_then(|p| p.parse::<u16>().ok())
+        .unwrap_or(8080);
+    
+    let addr = std::net::SocketAddr::from(([0, 0, 0, 0], port));
+
+    // Try to load Leptos.toml, fall back to defaults
+    let mut leptos_options = LeptosOptions::builder()
+        .output_name("todomvc")
+        .site_root(std::env::var("LEPTOS_SITE_ROOT").unwrap_or_else(|_| "site".to_string()))
+        .site_pkg_dir("pkg")
+        .env(leptos::config::Env::PROD)
+        .build();
+    leptos_options.site_addr = addr;
+
     let routes = generate_route_list(App);
 
     let app = Router::new()
