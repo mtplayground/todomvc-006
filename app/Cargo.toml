@@ -1,0 +1,33 @@
+[package]
+name = "app"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "app"
+path = "src/main.rs"
+
+[lib]
+name = "app"
+path = "src/lib.rs"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+leptos = { version = "0.7", default-features = false }
+leptos_axum = { version = "0.7", optional = true }
+axum = { version = "0.7", optional = true }
+tokio = { version = "1", features = ["full"], optional = true }
+wasm-bindgen = { version = "0.2", optional = true }
+
+[features]
+default = []
+ssr = [
+    "leptos/ssr",
+    "dep:leptos_axum",
+    "dep:axum",
+    "dep:tokio",
+]
+hydrate = [
+    "leptos/hydrate",
+    "dep:wasm-bindgen",
+]
