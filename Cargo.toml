@@ -1,0 +1,12 @@
+[workspace]
+members = ["app"]
+resolver = "2"
+
+[workspace.metadata.leptos]
+name = "todomvc-006"
+output-name = "todomvc-006"
+site-root = "site"
+site-pkg-dir = "pkg"
+style-file = ""
+bin-features = ["ssr"]
+lib-features = ["hydrate"]
