@@ -50,3 +50,38 @@ pub async fn delete_todo(id: i64) -> Result<(), ServerFnError> {
         .map_err(|e| ServerFnError::ServerError::<server_fn::error::NoCustomError>(e.to_string()))?;
     Ok(())
 }
+
+#[server(UpdateTodo, "/api")]
+pub async fn update_todo(id: i64, title: String, completed: bool) -> Result<(), ServerFnError> {
+    let pool = get_db().await?;
+    let title = title.trim().to_string();
+    sqlx::query("UPDATE todos SET title = ?, completed = ? WHERE id = ?")
+        .bind(&title)
+        .bind(completed)
+        .bind(id)
+        .execute(&pool)
+        .await
+        .map_err(|e| ServerFnError::ServerError::<server_fn::error::NoCustomError>(e.to_string()))?;
+    Ok(())
+}
+
+#[server(ToggleAll, "/api")]
+pub async fn toggle_all(completed: bool) -> Result<(), ServerFnError> {
+    let pool = get_db().await?;
+    sqlx::query("UPDATE todos SET completed = ?")
+        .bind(completed)
+        .execute(&pool)
+        .await
+        .map_err(|e| ServerFnError::ServerError::<server_fn::error::NoCustomError>(e.to_string()))?;
+    Ok(())
+}
+
+#[server(ClearCompleted, "/api")]
+pub async fn clear_completed() -> Result<(), ServerFnError> {
+    let pool = get_db().await?;
+    sqlx::query("DELETE FROM todos WHERE completed = TRUE")
+        .execute(&pool)
+        .await
+        .map_err(|e| ServerFnError::ServerError::<server_fn::error::NoCustomError>(e.to_string()))?;
+    Ok(())
+}
