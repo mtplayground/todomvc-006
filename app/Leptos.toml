@@ -1,0 +1,17 @@
+[package]
+name = "todomvc"
+version = "0.1.0"
+
+[lib]
+output-name = "todomvc"
+
+[site]
+pkg-dir = "pkg"
+site-addr = "0.0.0.0:8080"
+reload-port = 3001
+end2end-cmd = ""
+browser-query = "default"
+env = "DEV"
+
+[site.wasm-opt]
+z = true
